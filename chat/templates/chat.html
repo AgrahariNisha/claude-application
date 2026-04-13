@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="main">
+
+    <!-- 🔹 Sidebar -->
+    <div class="sidebar">
+        <h3>💬 Chats</h3>
+
+        <a href="/new/" class="new-btn">+ New Chat</a>
+
+        {% for s in sessions %}
+            <div class="chat-item">
+                <a href="/chat/{{ s.id }}/">
+                    {{ s.title }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- 🔹 Chat Area -->
+    <div class="chat-container">
+
+        <!-- Messages -->
+        <div class="chat-box" id="chatBox">
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="message {{ msg.role }}">
+                        {{ msg.message }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align:center; opacity:0.6; margin-top:100px;">
+                    <h2>👋 Welcome</h2>
+                    <p>Start a conversation with your AI</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+
+            <!-- Send Form -->
+            <form method="POST" action="/send/{{ current_session.id }}/" class="input-form">
+                {% csrf_token %}
+                <input 
+                    type="text" 
+                    name="message" 
+                    placeholder="Ask anything..." 
+                    required 
+                    autocomplete="off"
+                >
+                <button type="submit">Send</button>
+            </form>
+
+            <!-- Clear Button -->
+            <form method="POST" action="/clear/{{ current_session.id }}/">
+                {% csrf_token %}
+                <button class="clear-btn">Clear</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🔥 Auto Scroll Script -->
+<script>
+    const chatBox = document.getElementById("chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+</body>
+</html>
